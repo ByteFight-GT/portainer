@@ -1,0 +1,60 @@
+services:
+  engine:
+    image: "${ENGINE_IMAGE}"
+
+    environment:
+      APP_DIR: "${APP_ROOT:-/opt/bytefight}/${GAME_SLUG}"
+      TMPDIR: "${APP_ROOT:-/opt/bytefight}/tmp/${GAME_SLUG}/{{.Task.Slot}}"
+
+    volumes:
+      # Lets the engine spawn agent sandboxes on the node it runs on.
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+
+      # Where the entrypoint copies the game code so the node can see it.
+      - type: bind
+        source: "${APP_ROOT:-/opt/bytefight}/${GAME_SLUG}"
+        target: "${APP_ROOT:-/opt/bytefight}/${GAME_SLUG}"
+
+      # tmp directory for storing download submissions and stuff
+      - type: bind
+        source: "${APP_ROOT:-/opt/bytefight}/tmp/${GAME_SLUG}/{{.Task.Slot}}"
+        target: "${APP_ROOT:-/opt/bytefight}/tmp/${GAME_SLUG}/{{.Task.Slot}}"
+
+    secrets:
+      - source: pika_url
+        target: pika_url
+      - source: webserver_url
+        target: webserver_url
+      - source: auth_token
+        target: auth_token
+
+    deploy:
+      replicas: ${REPLICAS:-3}
+      placement:
+        preferences:
+          - spread: node.id
+      resources:
+        reservations:
+          cpus: "${RESERVE_CPUS:-2.5}"
+          memory: "${RESERVE_MEMORY:-1400M}"
+      restart_policy:
+        condition: any
+        delay: 30s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: stop-first
+
+secrets:
+  pika_url:
+    external: true
+    name: /run/secrets/pika_url
+  webserver_url:
+    external: true
+    name: /run/secrets/webserver_url
+  auth_token:
+    external: true
+    name: /run/secrets/auth_token
+
