@@ -1,0 +1,54 @@
+{
+  "version": "3",
+  "templates": [
+    {
+      "type": 2,
+      "title": "ByteFight Engine",
+      "description": "A game engine worker. Consumes match jobs from RabbitMQ and runs each player's submission in its own sandbox container on the node.",
+      "categories": [
+        "ByteFight"
+      ],
+      "platform": "linux",
+      "repository": {
+        "url": "https://github.com/ByteFight-GT/portainer",
+        "stackfile": "stackfile/engine.stack.yml"
+      },
+      "env": [
+        {
+          "name": "ENGINE_IMAGE",
+          "label": "Engine image",
+          "description": "Tag for the engine image",
+          "default": "ghcr.io/bytefight-gt/engine-connect4:latest"
+        },
+        {
+          "name": "GAME_SLUG",
+          "label": "Game slug",
+          "default": "connect4"
+        },
+        {
+          "name": "REPLICAS",
+          "label": "Replicas",
+          "description": "Concurrent matches for this game across the cluster. Each replica handles one match at a time.",
+          "default": "3"
+        },
+        {
+          "name": "RESERVE_CPUS",
+          "label": "Reserved CPUs per replica",
+          "default": "2"
+        },
+        {
+          "name": "RESERVE_MEMORY",
+          "label": "Reserved memory per replica",
+          "default": "1400M"
+        },
+        {
+          "name": "APP_ROOT",
+          "label": "Application root",
+          "description": "Host path the game code is aligned at. Change only if you know why.",
+          "default": "/opt/bytefight"
+        }
+      ]
+    }
+  ]
+}
+

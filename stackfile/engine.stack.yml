@@ -50,11 +50,11 @@ services:
 secrets:
   pika_url:
     external: true
-    name: /run/secrets/pika_url
+    name: bytefight_pika_url
   webserver_url:
     external: true
-    name: /run/secrets/webserver_url
+    name: bytefight_webserver_url
   auth_token:
     external: true
-    name: /run/secrets/auth_token
+    name: bytefight_auth_token
 
