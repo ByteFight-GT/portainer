@@ -12,15 +12,9 @@ services:
         source: /var/run/docker.sock
         target: /var/run/docker.sock
 
-      # Where the entrypoint copies the game code so the node can see it.
       - type: bind
-        source: "${APP_ROOT:-/opt/bytefight}/${GAME_SLUG}"
-        target: "${APP_ROOT:-/opt/bytefight}/${GAME_SLUG}"
-
-      # tmp directory for storing download submissions and stuff
-      - type: bind
-        source: "${APP_ROOT:-/opt/bytefight}/tmp/${GAME_SLUG}/{{.Task.Slot}}"
-        target: "${APP_ROOT:-/opt/bytefight}/tmp/${GAME_SLUG}/{{.Task.Slot}}"
+        source: "${APP_ROOT:-/opt/bytefight}"
+        target: "${APP_ROOT:-/opt/bytefight}"
 
     secrets:
       - source: pika_url
