@@ -16,6 +16,10 @@ services:
         source: "${APP_ROOT:-/opt/bytefight}"
         target: "${APP_ROOT:-/opt/bytefight}"
 
+      - type: bind
+        source: /sys/fs/cgroup
+        target: /sys/fs/cgroup
+
     secrets:
       - source: pika_url
         target: pika_url
